@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/drawMenu_findDistance"
+        android:icon="@drawable/ic_direction"
+        android:title="Find Distance" />
+
+    <item
+        android:id="@+id/drawMenu_markLocation"
+        android:icon="@drawable/ic_marklocation"
+        android:title="Mark Location"/>
+</menu>
