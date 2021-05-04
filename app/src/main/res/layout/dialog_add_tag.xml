@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/layoutPadding"
+    android:paddingTop="@dimen/layoutPadding"
+    android:paddingBottom="@dimen/viewPadding">
+
+    <TextView
+        android:text="Add New Location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TitleTextStyle"
+        android:textColor="?attr/colorPrimary"
+        android:layout_marginBottom="6dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="6dp">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            style="@style/BodyTextStyle"
+            android:text="Label" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/BodyTextStyle"
+            android:text=":"
+            android:layout_marginHorizontal="6dp"/>
+
+        <EditText
+            android:id="@+id/dialog_inputTag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:inputType="text"
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor"
+            style="@style/BodyTextStyle"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/dialog_btnConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm"
+            style="@style/PositiveButtonStyle"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:foregroundGravity="center"/>
+
+        <TextView
+            android:id="@+id/dialog_btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            style="@style/NegativeButtonStyle"
+            android:layout_alignBaseline="@id/dialog_btnConfirm"
+            android:layout_toLeftOf="@id/dialog_btnConfirm"
+            android:layout_toStartOf="@id/dialog_btnConfirm"
+            android:foregroundGravity="center"/>
+    </RelativeLayout>
+</LinearLayout>

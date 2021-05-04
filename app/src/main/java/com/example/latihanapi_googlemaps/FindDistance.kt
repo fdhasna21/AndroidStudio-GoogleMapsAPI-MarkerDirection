@@ -6,7 +6,6 @@ import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -30,7 +29,7 @@ class FindDistance : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find_distance)
         val mapFragment = supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
+                .findFragmentById(R.id.fd_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         actionBarToggle = ActionBarDrawerToggle(this, drawerLayout, 0, 0)
@@ -53,8 +52,6 @@ class FindDistance : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    @SuppressLint("ResourceAsColor")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isZoomControlsEnabled = true
@@ -97,7 +94,7 @@ class FindDistance : AppCompatActivity(), OnMapReadyCallback {
             )
         }
 
-        btn_addLocation.setOnClickListener {
+        fd_btn_addLocation.setOnClickListener {
             //TODO : respond if location change (want to change hint and border color but it can't, dunno why)
             x++
             val latlng : LatLng = mMap.cameraPosition.target
@@ -107,12 +104,12 @@ class FindDistance : AppCompatActivity(), OnMapReadyCallback {
             var updateLocation : String = ""
 
             if(x==1){
-                noLocationAvailable.visibility = View.INVISIBLE
-                locationA_container.visibility = View.VISIBLE
+                fd_noLocationAvailable.visibility = View.INVISIBLE
+                fd_locationA_container.visibility = View.VISIBLE
             }
             else{
-                locationB_container.visibility = View.VISIBLE
-                distance_container.visibility = View.VISIBLE
+                fd_locationB_container.visibility = View.VISIBLE
+                fd_distance_container.visibility = View.VISIBLE
             }
 
             if(x%2 == 0){
@@ -128,8 +125,8 @@ class FindDistance : AppCompatActivity(), OnMapReadyCallback {
                 )
                 locationB.longitude = latlngB.longitude
                 locationB.latitude = latlngB.latitude
-                locationB_longitude.setText(locationB.longitude.toString())
-                locationB_latitude.setText(locationB.latitude.toString())
+                fd_locationB_longitude.setText(locationB.longitude.toString())
+                fd_locationB_latitude.setText(locationB.latitude.toString())
             }
             else{
                 updateLocation = "Location A"
@@ -143,8 +140,8 @@ class FindDistance : AppCompatActivity(), OnMapReadyCallback {
                 )
                 locationA.longitude = latlngA.longitude
                 locationA.latitude = latlngA.latitude
-                locationA_longitude.setText(locationA.longitude.toString())
-                locationA_latitude.setText(locationA.latitude.toString())
+                fd_locationA_longitude.setText(locationA.longitude.toString())
+                fd_locationA_latitude.setText(locationA.latitude.toString())
             }
             Toast.makeText(applicationContext, "$updateLocation updated.", Toast.LENGTH_SHORT).show()
 
@@ -157,10 +154,10 @@ class FindDistance : AppCompatActivity(), OnMapReadyCallback {
                         .color(R.color.teal_700)
                 )
             }
-            distance.setText(locationA.distanceTo(locationB).toString() + " meter")
+            fd_distance.setText((locationA.distanceTo(locationB)/1000).toString() + " km")
         }
 
-        btn_reset.setOnClickListener {
+        fd_btn_reset.setOnClickListener {
             if(x!=0){Toast.makeText(this, "Reset", Toast.LENGTH_SHORT).show()}
             x=0
             distancePolyline.remove()
@@ -171,10 +168,10 @@ class FindDistance : AppCompatActivity(), OnMapReadyCallback {
             markerB.isVisible=false
             distancePolyline.isVisible = false
             mMap.clear()
-            noLocationAvailable.visibility = View.VISIBLE
-            locationA_container.visibility = View.GONE
-            locationB_container.visibility = View.GONE
-            distance_container.visibility = View.GONE
+            fd_noLocationAvailable.visibility = View.VISIBLE
+            fd_locationA_container.visibility = View.GONE
+            fd_locationB_container.visibility = View.GONE
+            fd_distance_container.visibility = View.GONE
             currentMarker = mMap.addMarker(
                 MarkerOptions()
                     .position(currentPosition)
@@ -183,7 +180,7 @@ class FindDistance : AppCompatActivity(), OnMapReadyCallback {
             )
         }
 
-        btn_reset.callOnClick()
+        fd_btn_reset.callOnClick()
     }
 
     override fun onSupportNavigateUp(): Boolean {
