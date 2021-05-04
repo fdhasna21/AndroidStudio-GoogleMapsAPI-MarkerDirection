@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+<!--        <item name="android:textColorHint">?attr/colorPrimary</item>-->
+        <item name="android:strokeColor">?attr/colorPrimary</item>
+        <item name="strokeColor">?attr/colorPrimary</item>
+    </style>
+</resources>

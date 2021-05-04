@@ -22,15 +22,28 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layoutPadding">
+            android:layout_margin="@dimen/layoutPadding"
+            android:layout_gravity="center_horizontal">
 
             <Button
                 android:id="@+id/btn_addLocation"
                 android:text="Add Location"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="8dp"/>
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginHorizontal="@dimen/viewPadding"/>
+
+            <Button
+                android:id="@+id/btn_reset"
+                android:text="Reset"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/btn_addLocation"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginHorizontal="@dimen/viewPadding"
+                style="?attr/materialButtonOutlinedStyle"/>
 
             <TextView
                 android:id="@+id/noLocationAvailable"
@@ -68,30 +81,11 @@
                     android:layout_below="@id/locationA_txt_location">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight=".5"
                         android:layout_marginRight="6dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/locationA_latitude"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Latitude"
-                            android:clickable="false"
-                            android:cursorVisible="false"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:singleLine="true"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".5"
-                        android:layout_marginLeft="6dp">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/locationA_longitude"
@@ -100,9 +94,26 @@
                             android:hint="Longitude"
                             android:clickable="false"
                             android:cursorVisible="false"
-                            android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:singleLine="true"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:layout_marginLeft="6dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/locationA_latitude"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Latitude"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusableInTouchMode="false"
+                            android:singleLine="true" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </RelativeLayout>
@@ -134,30 +145,11 @@
                     android:layout_below="@id/locationB_txt_location">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight=".5"
                         android:layout_marginRight="6dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/locationB_latitude"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Latitude"
-                            android:clickable="false"
-                            android:cursorVisible="false"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:singleLine="true"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".5"
-                        android:layout_marginLeft="6dp">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/locationB_longitude"
@@ -166,9 +158,26 @@
                             android:hint="Longitude"
                             android:clickable="false"
                             android:cursorVisible="false"
-                            android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:singleLine="true"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:layout_marginLeft="6dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/locationB_latitude"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Latitude"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusableInTouchMode="false"
+                            android:singleLine="true" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </RelativeLayout>
@@ -194,7 +203,7 @@
                     android:layout_marginBottom="4dp"/>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
@@ -208,7 +217,6 @@
                         android:hint="Distance"
                         android:clickable="false"
                         android:cursorVisible="false"
-                        android:focusable="false"
                         android:focusableInTouchMode="false"
                         android:singleLine="true"/>
                 </com.google.android.material.textfield.TextInputLayout>
