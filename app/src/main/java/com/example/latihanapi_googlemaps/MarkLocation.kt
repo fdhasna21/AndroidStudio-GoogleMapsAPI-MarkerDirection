@@ -1,22 +1,19 @@
 package com.example.latihanapi_googlemaps
 
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.location.Geocoder
-import androidx.appcompat.app.AppCompatActivity
+import android.location.Location
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-
+import com.example.latihanapi_googlemaps.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -34,20 +31,23 @@ class MarkLocation : AppCompatActivity(), OnMapReadyCallback {
 
     fun showAllLocation(){
         ml_recycler.layoutManager = LinearLayoutManager(this)
-        ml_recycler.adapter = LocationAdapter(locationArray, this)
+        ml_recycler.adapter = LocationAdapter(this, locationArray)
         if(locationArray.size == 0){
             ml_noLocationAvailable.visibility = View.VISIBLE
-            ml_recycler.visibility = View.INVISIBLE
-            ml_divider.visibility = View.INVISIBLE
+            ml_recycler.visibility = View.GONE
+            ml_divider.visibility = View.GONE
+            ml_direction_container.visibility = View.GONE
         }
         else{
-            ml_noLocationAvailable.visibility = View.INVISIBLE
+            ml_noLocationAvailable.visibility = View.GONE
             ml_recycler.visibility = View.VISIBLE
-            ml_divider.visibility = View.INVISIBLE
+            ml_divider.visibility = View.VISIBLE
+            ml_direction_container.visibility = View.VISIBLE
         }
+        spinnerSetting()
     }
 
-    fun deleteLocation(location : LocationModel){
+    fun deleteLocation(location: LocationModel){
         val builder = MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
         builder.setTitle("Delete Record")
         builder.setMessage("Are you sure?")
@@ -56,7 +56,7 @@ class MarkLocation : AppCompatActivity(), OnMapReadyCallback {
 
         builder.setPositiveButton("Yes"){ dialog: DialogInterface, which ->
             locationArray.removeAt(location.id)
-            Toast.makeText(this,"Delete location ${location.id+1}.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Delete location ${location.id + 1}.", Toast.LENGTH_SHORT).show()
             location.marker.remove()
             dialog.dismiss()
             showAllLocation()
@@ -72,9 +72,29 @@ class MarkLocation : AppCompatActivity(), OnMapReadyCallback {
     private fun closeKeyboard(){
         val view = this.currentFocus
         if(view!=null){
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
+    }
+
+    private fun spinnerSetting(){
+        val spinnerArray = ArrayList<String>()
+        for(i in 1 until locationArray.size+1){
+            spinnerArray.add("Location $i")
+        }
+        ml_sp_locationA.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, spinnerArray)
+        ml_sp_locationB.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, spinnerArray)
+    }
+
+    private fun distance(locationA: LatLng, locationB: LatLng){
+        val LocationA = Location("")
+        val LocationB = Location("")
+        LocationA.longitude = locationA.longitude
+        LocationA.latitude = locationA.latitude
+        LocationB.longitude = locationB.longitude
+        LocationB.latitude = locationB.latitude
+        ml_distanceValue.text = (LocationA.distanceTo(LocationB)/1000).toString() + " km"
+        //TODO : distance.text didn't change
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,13 +105,14 @@ class MarkLocation : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         showAllLocation()
+        ml_distanceValue.text = "distanceValue"
 
-        actionBarToggle = ActionBarDrawerToggle(this, ml_drawerLayout,0,0)
+        actionBarToggle = ActionBarDrawerToggle(this, ml_drawerLayout, 0, 0)
         ml_drawerLayout.addDrawerListener(actionBarToggle)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Mark Location"
         actionBarToggle.syncState()
-        ml_navigationView.setNavigationItemSelectedListener {menuItem ->
+        ml_navigationView.setNavigationItemSelectedListener { menuItem ->
             when(menuItem.itemId) {
                 R.id.drawMenu_findDistance -> {
                     val intent = Intent(this, FindDistance::class.java)
@@ -105,6 +126,34 @@ class MarkLocation : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        if(locationArray.size > 0) {
+            var locationA = LocationAdapter(this@MarkLocation, locationArray).getLatLong(0)
+            var locationB = LocationAdapter(this@MarkLocation, locationArray).getLatLong(0)
+            ml_sp_locationA.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    locationA = LocationAdapter(this@MarkLocation, locationArray).getLatLong(position)
+                    distance(locationA, locationB)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    locationA = LocationAdapter(this@MarkLocation, locationArray).getLatLong(0)
+                    distance(locationA, locationB)
+                }
+            }
+
+            ml_sp_locationB.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    locationB =
+                        LocationAdapter(this@MarkLocation, locationArray).getLatLong(position)
+                    distance(locationA, locationB)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    locationB = LocationAdapter(this@MarkLocation, locationArray).getLatLong(0)
+                    distance(locationA, locationB)
+                }
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -116,10 +165,10 @@ class MarkLocation : AppCompatActivity(), OnMapReadyCallback {
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(surabaya, zoomScale))
         var currentMarker : Marker = mMap.addMarker(
-            MarkerOptions()
-                .position(currentPosition)
-                .title("Current")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
+                MarkerOptions()
+                        .position(currentPosition)
+                        .title("Current")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
 
         mMap.setOnCameraIdleListener {
             currentMarker.remove()
@@ -187,5 +236,10 @@ class MarkLocation : AppCompatActivity(), OnMapReadyCallback {
             ml_drawerLayout.openDrawer(GravityCompat.START)
         }
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        supportFragmentManager.beginTransaction().remove(ml_map).commit()
     }
 }

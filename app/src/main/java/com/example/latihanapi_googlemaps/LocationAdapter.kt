@@ -11,10 +11,12 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.textfield.TextInputEditText
 
-class LocationAdapter(val arrayList: ArrayList<LocationModel>, val context: Context)
+class LocationAdapter(val context: Context, val arrayList: ArrayList<LocationModel>)
     : RecyclerView.Adapter<LocationAdapter.ViewHolder>(){
+
     class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
         val layoutAdapt = itemView.findViewById<RelativeLayout>(R.id.recordlayout_container)
         val positionAdapt = itemView.findViewById<TextView>(R.id.recordlayout_position)
@@ -30,7 +32,7 @@ class LocationAdapter(val arrayList: ArrayList<LocationModel>, val context: Cont
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.record_row, parent, false))
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.location_row, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -86,5 +88,9 @@ class LocationAdapter(val arrayList: ArrayList<LocationModel>, val context: Cont
 
     override fun getItemCount(): Int {
         return arrayList.size
+    }
+
+    fun getLatLong(position : Int):LatLng{
+        return arrayList[position].latlong
     }
 }
