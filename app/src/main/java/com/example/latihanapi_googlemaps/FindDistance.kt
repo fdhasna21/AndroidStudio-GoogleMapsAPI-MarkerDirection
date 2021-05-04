@@ -1,14 +1,11 @@
 package com.example.latihanapi_googlemaps
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Geocoder
 import android.location.Location
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -56,7 +53,8 @@ class FindDistance : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
         mMap.uiSettings.isZoomControlsEnabled = true
         val zoomScale : Float = 15f
-        var x = 0
+        var noLocation : Boolean = true
+        var updateLocationA : Boolean = true //true->LocationA, false->LocationB
         val surabaya = LatLng(-7.2575, 112.7521)
         var currentPosition = surabaya
 
@@ -96,14 +94,14 @@ class FindDistance : AppCompatActivity(), OnMapReadyCallback {
 
         fd_btn_addLocation.setOnClickListener {
             //TODO : respond if location change (want to change hint and border color but it can't, dunno why)
-            x++
             val latlng : LatLng = mMap.cameraPosition.target
             val latlngString = "${latlng.longitude} | ${latlng.latitude}"
             val geocoder = Geocoder(this)
-            geocoder.getFromLocation(latlng.latitude, latlng.longitude, 1)
+            val geoAddress = geocoder.getFromLocation(latlng.latitude, latlng.longitude, 1)
+            val geoResult = geoAddress[0].getAddressLine(0)
             var updateLocation : String = ""
 
-            if(x==1){
+            if(noLocation){
                 fd_noLocationAvailable.visibility = View.INVISIBLE
                 fd_locationA_container.visibility = View.VISIBLE
             }
@@ -112,36 +110,41 @@ class FindDistance : AppCompatActivity(), OnMapReadyCallback {
                 fd_distance_container.visibility = View.VISIBLE
             }
 
-            if(x%2 == 0){
-                updateLocation = "Location B"
-                latlngB = latlng
-                markerB.isVisible = true
-                markerB.remove()
-                markerB = mMap.addMarker(
-                    MarkerOptions()
-                        .position(latlngB)
-                        .title("Location 2")
-                        .snippet(latlngString)
-                )
-                locationB.longitude = latlngB.longitude
-                locationB.latitude = latlngB.latitude
-                fd_locationB_longitude.setText(locationB.longitude.toString())
-                fd_locationB_latitude.setText(locationB.latitude.toString())
-            }
-            else{
+            if(updateLocationA){
                 updateLocation = "Location A"
                 latlngA = latlng
                 markerA.isVisible = true
                 markerA.remove()
                 markerA = this.mMap.addMarker(
-                    MarkerOptions()
-                        .position(latlngA).title("Location 1")
-                        .snippet(latlngString)
+                        MarkerOptions()
+                                .position(latlngA).title("Location 1")
+                                .snippet(latlngString)
                 )
                 locationA.longitude = latlngA.longitude
                 locationA.latitude = latlngA.latitude
                 fd_locationA_longitude.setText(locationA.longitude.toString())
                 fd_locationA_latitude.setText(locationA.latitude.toString())
+                fd_locationA_address.text = geoResult.toString()
+                updateLocationA = false
+                noLocation = false
+            }
+            else{
+                updateLocation = "Location B"
+                latlngB = latlng
+                markerB.isVisible = true
+                markerB.remove()
+                markerB = mMap.addMarker(
+                        MarkerOptions()
+                                .position(latlngB)
+                                .title("Location 2")
+                                .snippet(latlngString)
+                )
+                locationB.longitude = latlngB.longitude
+                locationB.latitude = latlngB.latitude
+                fd_locationB_longitude.setText(locationB.longitude.toString())
+                fd_locationB_latitude.setText(locationB.latitude.toString())
+                fd_locationB_address.text = geoResult.toString()
+                updateLocationA = true
             }
             Toast.makeText(applicationContext, "$updateLocation updated.", Toast.LENGTH_SHORT).show()
 
@@ -158,8 +161,9 @@ class FindDistance : AppCompatActivity(), OnMapReadyCallback {
         }
 
         fd_btn_reset.setOnClickListener {
-            if(x!=0){Toast.makeText(this, "Reset", Toast.LENGTH_SHORT).show()}
-            x=0
+            if(noLocation==false){Toast.makeText(this, "Reset all locations.", Toast.LENGTH_SHORT).show()}
+            noLocation = true
+            updateLocationA = true
             distancePolyline.remove()
             currentPosition = mMap.cameraPosition.target
             latlngA = currentPosition

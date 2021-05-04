@@ -1,12 +1,15 @@
 package com.example.latihanapi_googlemaps
 
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.location.Geocoder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -66,6 +69,14 @@ class MarkLocation : AppCompatActivity(), OnMapReadyCallback {
         builder.show()
     }
 
+    private fun closeKeyboard(){
+        val view = this.currentFocus
+        if(view!=null){
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mark_location)
@@ -100,7 +111,6 @@ class MarkLocation : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
         mMap.uiSettings.isZoomControlsEnabled = true
         val zoomScale : Float = 15f
-        var x = 0
         val surabaya = LatLng(-7.2575, 112.7521)
         var currentPosition = surabaya
 
@@ -138,20 +148,19 @@ class MarkLocation : AppCompatActivity(), OnMapReadyCallback {
                 val tag = inputTag.text.toString()
                 if(tag == ""){
                     Toast.makeText(this@MarkLocation, "Label cannot be empty.", Toast.LENGTH_SHORT).show()
+
                 }
                 else{
                     val latlng : LatLng = mMap.cameraPosition.target
-                    val latlngString = "${latlng.longitude} | ${latlng.latitude}"
                     val geocoder = Geocoder(this)
                     geocoder.getFromLocation(latlng.latitude, latlng.longitude, 1)
-                    locationArray.add(LocationModel(0, tag, latlng,
-                            mMap.addMarker(MarkerOptions()
-                            .position(latlng)
-                            .snippet(latlngString))))
+                    locationArray.add(LocationModel(0, tag, latlng, mMap.addMarker(MarkerOptions().position(latlng))))
                     builder.dismiss()
                     showAllLocation()
-                    //TODO : recycler didn't updated
+                    closeKeyboard()
                 }
+
+                //TODO : recycler didn't updated, just shown first locations because of softkeyboard stuck
             }
             builder.show()
         }
@@ -165,6 +174,7 @@ class MarkLocation : AppCompatActivity(), OnMapReadyCallback {
                             .position(currentPosition)
                             .title("Current")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
+            Toast.makeText(this@MarkLocation, "Reset all locations.", Toast.LENGTH_SHORT).show()
             showAllLocation()
         }
     }

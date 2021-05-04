@@ -15,7 +15,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.LatihanAPIGoogleMaps">
+        android:theme="@style/Theme.LatihanAPIGoogleMaps"
+        android:windowSoftInputMode="stateAlwaysHidden">
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -38,6 +39,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.example.latihanapi_googlemaps.MarkLocation"
+            android:label="@string/title_activity_mark_location"></activity>
     </application>
 
 </manifest>

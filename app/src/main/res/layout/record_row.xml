@@ -35,6 +35,18 @@
         android:text="Location Tag"
         android:layout_marginRight="@dimen/viewPadding"/>
 
+    <TextView
+        android:id="@+id/recordlayout_address"
+        android:layout_width="match_parent"
+        android:layout_marginEnd="@dimen/layoutPadding"
+        android:layout_height="wrap_content"
+        style="?attr/textAppearanceSubtitle1"
+        android:layout_below="@id/recordlayout_tag"
+        android:layout_toRightOf="@id/recordlayout_separator"
+        android:textSize="14dp"
+        android:text="Location Address"
+        android:layout_marginRight="@dimen/viewPadding"/>
+
     <ImageView
         android:id="@+id/recordlayout_more"
         android:layout_width="20dp"
@@ -48,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/recordlayout_position"
+        android:layout_below="@id/recordlayout_address"
         android:layout_margin="6dp">
 
         <com.google.android.material.textfield.TextInputLayout

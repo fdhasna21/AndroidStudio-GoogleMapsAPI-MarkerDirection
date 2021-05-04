@@ -1,6 +1,7 @@
 package com.example.latihanapi_googlemaps
 
 import android.content.Context
+import android.location.Geocoder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ class LocationAdapter(val arrayList: ArrayList<LocationModel>, val context: Cont
         val layoutAdapt = itemView.findViewById<RelativeLayout>(R.id.recordlayout_container)
         val positionAdapt = itemView.findViewById<TextView>(R.id.recordlayout_position)
         val tagAdapt = itemView.findViewById<TextView>(R.id.recordlayout_tag)
+        val addressAdapt = itemView.findViewById<TextView>(R.id.recordlayout_address)
         val moreAdapt = itemView.findViewById<ImageView>(R.id.recordlayout_more)
         val locationAdapt = itemView.findViewById<LinearLayout>(R.id.recordlayout_location_container)
         val longitudeAdapt = itemView.findViewById<TextInputEditText>(R.id.recordlayout_longitude)
@@ -42,6 +44,14 @@ class LocationAdapter(val arrayList: ArrayList<LocationModel>, val context: Cont
         item.marker.title = stringPosition
         holder.locationAdapt.visibility = View.GONE
         holder.buttonAdapt.visibility = View.GONE
+        holder.addressAdapt.isSingleLine = true
+
+        val geocoder = Geocoder(context)
+        val geoAddress = geocoder.getFromLocation(item.latlong.latitude, item.latlong.longitude, 1)
+        val geoResult = geoAddress[0].getAddressLine(0)
+        holder.addressAdapt.text = geoResult.toString()
+
+        //TODO : if marker onClick, perform moreAdapt.onClick (expanding more data)
 
         if(position%2==0) {
             holder.layoutAdapt.setBackgroundColor(ContextCompat.getColor(context,R.color.purple_50))
@@ -56,12 +66,14 @@ class LocationAdapter(val arrayList: ArrayList<LocationModel>, val context: Cont
                 holder.buttonAdapt.visibility = View.VISIBLE
                 holder.moreAdapt.setImageResource(R.drawable.ic_more_up)
                 holder.openMoreAdapt = false
+                holder.addressAdapt.isSingleLine = false
             }
             else{
                 holder.locationAdapt.visibility = View.GONE
                 holder.buttonAdapt.visibility = View.GONE
                 holder.moreAdapt.setImageResource(R.drawable.ic_more_down)
                 holder.openMoreAdapt = true
+                holder.addressAdapt.isSingleLine = true
             }
         }
 
